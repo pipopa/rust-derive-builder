@@ -40,6 +40,9 @@ extern crate log;
 #[macro_use]
 extern crate pretty_assertions;
 
+#[macro_use]
+extern crate wasm_bindgen;
+
 mod block;
 mod build_method;
 mod builder;

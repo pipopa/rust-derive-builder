@@ -545,10 +545,11 @@
 //! [builder pattern]: https://aturon.github.io/ownership/builders.html
 //! [`derive_builder_core`]: https://crates.io/crates/derive_builder_core
 
-#![deny(warnings)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate derive_builder_macro;
+
+extern crate wasm_bindgen;
 
 pub use derive_builder_macro::Builder;
 
@@ -559,5 +560,8 @@ pub mod export {
         pub use core::*;
         #[cfg(feature = "std")]
         pub use std::*;
+    }
+    pub mod wasm_bindgen {
+        pub use wasm_bindgen::prelude::*;
     }
 }

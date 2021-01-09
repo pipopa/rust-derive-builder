@@ -36,6 +36,7 @@ use Setter;
 /// #           result.append_all(quote!(#[allow(clippy::all)]));
 /// #
 /// #           result.append_all(quote!(
+/// #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 /// #[derive(Default, Clone)]
 /// pub struct FooBuilder {
 ///     foo: u32,
@@ -49,6 +50,13 @@ use Setter;
 ///     UninitializedField(&'static str),
 ///     /// Custom validation error
 ///     ValidationError(String),
+/// }
+///
+/// #[cfg(target_arch = "wasm32")]
+/// impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+///     fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+///         ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+///     }
 /// }
 ///
 /// impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -80,6 +88,7 @@ use Setter;
 /// #
 /// #           result.append_all(quote!(
 ///
+/// #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 /// #[allow(dead_code)]
 /// impl FooBuilder {
 ///     fn bar () -> {
@@ -171,6 +180,7 @@ impl<'a> ToTokens for Builder<'a> {
             let builder_error_doc = format!("Error type for {}", builder_ident);
 
             tokens.append_all(quote!(
+                #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                 #[derive(#derived_traits)]
                 #builder_doc_comment
                 #builder_vis struct #builder_ident #struct_generics #where_clause {
@@ -185,6 +195,13 @@ impl<'a> ToTokens for Builder<'a> {
                     UninitializedField(&'static str),
                     /// Custom validation error
                     ValidationError(String),
+                }
+
+                #[cfg(target_arch = "wasm32")]
+                impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for #builder_error_ident {
+                    fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                        ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                    }
                 }
 
                 impl ::derive_builder::export::core::convert::From<&'static str> for #builder_error_ident {
@@ -216,6 +233,7 @@ impl<'a> ToTokens for Builder<'a> {
             tokens.append_all(quote!(#[allow(clippy::all)]));
 
             tokens.append_all(quote!(
+                #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                 #[allow(dead_code)]
                 impl #impl_generics #builder_ident #ty_generics #where_clause {
                     #(#functions)*
@@ -323,6 +341,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[derive(Default, Clone)]
                     pub struct FooBuilder {
                         foo: u32,
@@ -338,6 +357,13 @@ mod tests {
                         UninitializedField(&'static str),
                         /// Custom validation error
                         ValidationError(String),
+                    }
+
+                    #[cfg(target_arch = "wasm32")]
+                    impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+                        fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                            ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                        }
                     }
 
                     impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -369,6 +395,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[allow(dead_code)]
                     impl FooBuilder {
                         fn bar () -> {
@@ -404,6 +431,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[derive(Default, Clone)]
                     pub struct FooBuilder<'a, T: Debug> where T: PartialEq {
                         foo: u32,
@@ -419,6 +447,13 @@ mod tests {
                         UninitializedField(&'static str),
                         /// Custom validation error
                         ValidationError(String),
+                    }
+
+                    #[cfg(target_arch = "wasm32")]
+                    impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+                        fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                            ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                        }
                     }
 
                     impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -450,6 +485,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[allow(dead_code)]
                     impl<'a, T: Debug + ::derive_builder::export::core::clone::Clone> FooBuilder<'a, T> where T: PartialEq {
                         fn bar() -> {
@@ -485,6 +521,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[derive(Default, Clone)]
                     pub struct FooBuilder<'a, T: 'a + Default> where T: PartialEq {
                         foo: u32,
@@ -500,6 +537,13 @@ mod tests {
                         UninitializedField(&'static str),
                         /// Custom validation error
                         ValidationError(String),
+                    }
+
+                    #[cfg(target_arch = "wasm32")]
+                    impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+                        fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                            ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                        }
                     }
 
                     impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -531,6 +575,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[allow(dead_code)]
                     impl<'a, T: 'a + Default + ::derive_builder::export::core::clone::Clone> FooBuilder<'a, T>
                     where
@@ -570,6 +615,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[derive(Default)]
                     pub struct FooBuilder<'a, T: Debug> where T: PartialEq {
                         foo: u32,
@@ -585,6 +631,13 @@ mod tests {
                         UninitializedField(&'static str),
                         /// Custom validation error
                         ValidationError(String),
+                    }
+
+                    #[cfg(target_arch = "wasm32")]
+                    impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+                        fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                            ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                        }
                     }
 
                     impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -616,6 +669,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[allow(dead_code)]
                     impl<'a, T: Debug> FooBuilder<'a, T> where T: PartialEq {
                         fn bar() -> {
@@ -652,6 +706,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[derive(Default, Clone, Serialize)]
                     pub struct FooBuilder {
                         foo: u32,
@@ -667,6 +722,13 @@ mod tests {
                         UninitializedField(&'static str),
                         /// Custom validation error
                         ValidationError(String),
+                    }
+
+                    #[cfg(target_arch = "wasm32")]
+                    impl ::derive_builder::export::core::convert::Into<::derive_builder::export::wasm_bindgen::JsValue> for FooBuilderError {
+                        fn into(self) -> ::derive_builder::export::wasm_bindgen::JsValue {
+                            ::derive_builder::export::wasm_bindgen::JsValue::from(self)
+                        }
                     }
 
                     impl ::derive_builder::export::core::convert::From<&'static str> for FooBuilderError {
@@ -698,6 +760,7 @@ mod tests {
                 result.append_all(quote!(#[allow(clippy::all)]));
 
                 result.append_all(quote!(
+                    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
                     #[allow(dead_code)]
                     impl FooBuilder {
                         fn bar () -> {
